@@ -1,17 +1,23 @@
 all: build/gpio_test
 
-build/gpio_test: build/main.o JetsonGPIO/build/libJetsonGPIO.so.1.2.5
-	g++ -LJetsonGPIO/build/ -lJetsonGPIO -lpthread -o build/gpio_test build/main.o
+build/gpio_test: build/main.o JetsonGPIO/build/libJetsonGPIO.a
+	g++ -o build/gpio_test build/main.o -LJetsonGPIO/build/ -l:libJetsonGPIO.a -lpthread
 
-build/main.o: src/main.cpp | build
+build/main.o: src/main.cpp | build JetsonGPIO/include/JetsonGPIOConfig.h
 	g++ -o build/main.o -IJetsonGPIO/include -c src/main.cpp
 
-JetsonGPIO/build/libJetsonGPIO.so.1.2.5: 
+JetsonGPIO: JetsonGPIO/build/libJetsonGPIO.a JetsonGPIO/include/JetsonGPIOConfig.h
+
+JetsonGPIO/include/JetsonGPIOConfig.h: JetsonGPIO/build/libJetsonGPIO.a 
+	cp JetsonGPIO/build/JetsonGPIOConfig.h JetsonGPIO/include/JetsonGPIOConfig.h
+
+JetsonGPIO/build/libJetsonGPIO.a: 
 	cmake -S JetsonGPIO -B JetsonGPIO/build
 	cmake --build JetsonGPIO/build
 
+
 build:
-	mkdir build
+	mkdir -p build
 
 clean:
 	rm -r build JetsonGPIO/build

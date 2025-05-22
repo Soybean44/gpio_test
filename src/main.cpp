@@ -4,7 +4,7 @@
 #include <thread>
 
 // for signal handling
-#include <signal.h>
+#include <csignal>
 
 #include <JetsonGPIO.h>
 

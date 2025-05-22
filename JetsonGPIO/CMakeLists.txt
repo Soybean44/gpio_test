@@ -38,7 +38,7 @@ set(JetsonGPIO_LIB_SRCS
 configure_file(cmake/JetsonGPIOConfig.h.in JetsonGPIOConfig.h)
 
 # Build a shared library
-add_library(JetsonGPIO SHARED ${JetsonGPIO_LIB_SRCS})
+add_library(JetsonGPIO STATIC ${JetsonGPIO_LIB_SRCS})
 target_link_libraries(JetsonGPIO Threads::Threads)
 set_target_properties(JetsonGPIO PROPERTIES
                       VERSION ${PROJECT_VERSION}
@@ -107,10 +107,10 @@ if (JETSON_GPIO_POST_INSTALL)
 install (CODE "execute_process(COMMAND bash ./scripts/post_install.sh WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})")
 endif()
 
-# Build test codes 
-add_subdirectory(tests)
-
-# Build examples
-if (BUILD_EXAMPLES)
-add_subdirectory(samples)
-endif()
+# # Build test codes 
+# add_subdirectory(tests)
+#
+# # Build examples
+# if (BUILD_EXAMPLES)
+# add_subdirectory(samples)
+# endif()
