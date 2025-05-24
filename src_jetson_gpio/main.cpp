@@ -21,7 +21,7 @@ int main() {
   signal(SIGINT, signalHandler);
 
   // Pin Definitions
-  int output_pin = 18; // BOARD pin 12, BCM pin 18
+  int output_pin = 40; // BOARD pin 12, BCM pin 18
 
   // Pin Setup.
   GPIO::setmode(GPIO::TEGRA_SOC);

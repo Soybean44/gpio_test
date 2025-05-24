@@ -12,7 +12,7 @@
 
 /* Example configuration - customize to suit your situation. */
 const std::filesystem::path chip_path("/dev/gpiochip0");
-const gpiod::line::offset line_offset = 5;
+const gpiod::line::offset line_offset = 5; // TODO: set this to pin 40 or PI.00
 
 gpiod::line::value toggle_value(gpiod::line::value v) {
   return (v == gpiod::line::value::ACTIVE) ? gpiod::line::value::INACTIVE
