@@ -10,31 +10,28 @@
 #include <iostream>
 #include <thread>
 
-/* Example configuration - customize to suit your situation. */
 const std::filesystem::path chip_path("/dev/gpiochip0");
 const gpiod::line::offset line_offset = 5; // TODO: set this to pin 40 or PI.00
 
-gpiod::line::value toggle_value(gpiod::line::value v) {
-  return (v == gpiod::line::value::ACTIVE) ? gpiod::line::value::INACTIVE
-                                           : gpiod::line::value::ACTIVE;
-}
-
 int main() {
-  gpiod::line::value value = gpiod::line::value::ACTIVE;
-
-  auto request =
-      gpiod::chip(chip_path)
-          .prepare_request()
-          .set_consumer("toggle-line-value")
+  auto blink_request =
+      gpiod::chip(chip_path) // Open the chip
+          .prepare_request() // Create a line request
+          .set_consumer("Blink LED") // Set the consumer name for debugging
+          // We add line settings, making this an output pin
           .add_line_settings(line_offset, gpiod::line_settings().set_direction(
-                                              gpiod::line::direction::OUTPUT))
+                                              gpiod::line::direction::OUTPUT)) 
+          // Finalize the setup request
           .do_request();
 
   for (;;) {
-    std::cout << line_offset << "=" << value << "\n";
 
+
+    blink_request.set_value(line_offset, gpiod::line::value::ACTIVE);
+    std::cout << line_offset << " is on \n";
     std::this_thread::sleep_for(std::chrono::seconds(1));
-    value = toggle_value(value);
-    request.set_value(line_offset, value);
+    blink_request.set_value(line_offset, gpiod::line::value::INACTIVE);
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+    std::cout << line_offset << " is off \n";
   }
 }
